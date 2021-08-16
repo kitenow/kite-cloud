@@ -1,0 +1,124 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NodeDataStreamUtilsLambdaLayer": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "Content": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/node-data-stream-utils/dev/1628299361092-2021-08-07T01:22:41.092Z/NodeDataStreamUtils.zip"
+        },
+        "LayerName": "NodeDataStreamUtils",
+        "Description": "Node Data Stream Utils Dependencies",
+        "CompatibleRuntimes": [
+          "nodejs12.x"
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
+      "Export": {
+        "Name": "sls-node-data-stream-utils-dev-ServerlessDeploymentBucketName"
+      }
+    },
+    "NodeDataStreamUtilsLambdaLayerQualifiedArn": {
+      "Description": "Current Lambda layer version",
+      "Value": {
+        "Ref": "NodeDataStreamUtilsLambdaLayer"
+      },
+      "Export": {
+        "Name": "sls-node-data-stream-utils-dev-NodeDataStreamUtilsLambdaLayerQualifiedArn"
+      }
+    },
+    "NodeDataStreamUtilsLambdaLayerHash": {
+      "Description": "Current Lambda layer hash",
+      "Value": "23ec992c2e2ec1f764137bfc9284b89d64952d87",
+      "Export": {
+        "Name": "sls-node-data-stream-utils-dev-NodeDataStreamUtilsLambdaLayerHash"
+      }
+    },
+    "NodeDataStreamUtilsLambdaLayerS3Key": {
+      "Description": "Current Lambda layer S3Key",
+      "Value": "serverless/node-data-stream-utils/dev/1628299361092-2021-08-07T01:22:41.092Z/NodeDataStreamUtils.zip",
+      "Export": {
+        "Name": "sls-node-data-stream-utils-dev-NodeDataStreamUtilsLambdaLayerS3Key"
+      }
+    }
+  }
+}

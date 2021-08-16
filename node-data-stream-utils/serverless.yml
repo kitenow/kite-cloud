@@ -1,0 +1,14 @@
+service: node-data-stream-utils
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-southeast-1
+
+layers:
+  NodeDataStreamUtils:
+    path: node-utils
+    description: "Node Data Stream Utils Dependencies"
+    compatibleRuntimes:
+      - nodejs12.x

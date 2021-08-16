@@ -1,0 +1,44 @@
+service: helloworld
+
+frameworkVersion: "2"
+
+custom:
+  env: ${file(./env/${opt:stage,'local'}.json)}
+  prune:
+    automatic: true
+    number: 5
+
+package:
+  exclude:
+    - node_modules/**
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: ap-southeast-1
+  memorySize: 256
+  environment:
+    DB_CONSTRING: ${self:custom.env.DB_CONSTRING}
+    REDIS_HOST: ${self:custom.env.REDIS_HOST}
+    REDIS_PORT: ${self:custom.env.REDIS_PORT}
+    REDIS_PW: ${self:custom.env.REDIS_PW}
+    NODE_PATH: "./:/opt/node_modules"  
+
+functions:
+  hello:
+    handler: handler.hello
+    layers: arn:aws:lambda:ap-southeast-1:534845951116:layer:NodeDataStreamUtils:2
+    events:
+      - http:
+          path: hello/get
+          method: get
+          cors: true
+          
+plugins:
+  - serverless-offline
+  - serverless-prune-plugin
+
+
+
