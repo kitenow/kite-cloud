@@ -7,6 +7,21 @@ custom:
   prune:
     automatic: true
     number: 5
+  warmup:
+    officeHoursWarmer:
+      enabled: true
+      events:
+        - schedule: cron(0/5 8-17 ? * MON-FRI *)
+      concurrency: 1
+    outOfOfficeHoursWarmer:
+      enabled: false
+      events:
+        - schedule: cron(0/5 0-7 ? * MON-FRI *)
+        - schedule: cron(0/5 18-23 ? * MON-FRI *)
+        - schedule: cron(0/5 * ? * SAT-SUN *)
+      concurrency: 1
+    testWarmer:
+      enabled: false
 
 package:
   exclude:
@@ -35,10 +50,12 @@ functions:
           path: hello/get
           method: get
           cors: true
-          
+    warmup: true
+
 plugins:
   - serverless-offline
   - serverless-prune-plugin
+  - serverless-plugin-warmup
 
 
 
