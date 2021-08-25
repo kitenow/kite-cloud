@@ -7,25 +7,14 @@ custom:
   prune:
     automatic: true
     number: 5
-  warmup:
-    officeHoursWarmer:
-      enabled: true
-      events:
-        - schedule: cron(0/5 8-17 ? * MON-FRI *)
-      concurrency: 1
-    outOfOfficeHoursWarmer:
-      enabled: false
-      events:
-        - schedule: cron(0/5 0-7 ? * MON-FRI *)
-        - schedule: cron(0/5 18-23 ? * MON-FRI *)
-        - schedule: cron(0/5 * ? * SAT-SUN *)
-      concurrency: 1
-    testWarmer:
-      enabled: false
+  serverless-layers:
+    dependenciesPath: package.json
+    compatibleRuntimes: [nodejs12.x]
+    layersDeploymentBucket: "helloworld-layer-bucket"
 
-package:
-  exclude:
-    - node_modules/**
+#package:
+#  exclude:
+#    - node_modules/**
 
 provider:
   name: aws
@@ -39,23 +28,43 @@ provider:
     REDIS_HOST: ${self:custom.env.REDIS_HOST}
     REDIS_PORT: ${self:custom.env.REDIS_PORT}
     REDIS_PW: ${self:custom.env.REDIS_PW}
-    NODE_PATH: "./:/opt/node_modules"  
+    #NODE_PATH: "./:/opt/node_modules"  
 
 functions:
   hello:
     handler: handler.hello
-    layers: arn:aws:lambda:ap-southeast-1:534845951116:layer:NodeDataStreamUtils:2
     events:
       - http:
           path: hello/get
           method: get
           cors: true
-    warmup: true
+
+  func01:
+    handler: ./functions/func03.func03
+    events:
+      - http:
+          path: func01/get
+          method: get
+          cors: true
+
+  func02:
+    handler: ./functions/func03.func03
+    events:
+      - http:
+          path: func02/get
+          method: get
+          cors: true
+
+  func03:
+    handler: ./functions/func03.func03
+    events:
+      - http:
+          path: func03/get
+          method: get
+          cors: true
+
 
 plugins:
   - serverless-offline
   - serverless-prune-plugin
-  - serverless-plugin-warmup
-
-
-
+  - serverless-layers

@@ -1,9 +1,9 @@
 "use strict";
-const dbModule = require("./module/pg_module");
-const redisModule = require("./module/redis_module");
-const httpModule = require("./module/http_module");
+const dbModule = require("../module/pg_module");
+const redisModule = require("../module/redis_module");
+const httpModule = require("../module/http_module");
 
-module.exports.hello = async (event) => {
+module.exports.func03 = async (event) => {
   const httpResult = await httpModule.getUsersByHttp();
   console.log("3. HTTP RESULT");
   if (httpResult) {
@@ -43,6 +43,6 @@ module.exports.hello = async (event) => {
 
   return {
     statusCode: 200,
-    body: 'Hello from Lambda'
-  };
+    body: 'func03 from Lambda'
+  };   
 };
