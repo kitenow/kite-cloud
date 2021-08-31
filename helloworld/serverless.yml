@@ -6,11 +6,22 @@ custom:
   env: ${file(./env/${opt:stage,'local'}.json)}
   prune:
     automatic: true
-    number: 5
-  serverless-layers:
-    dependenciesPath: package.json
-    compatibleRuntimes: [nodejs12.x]
-    layersDeploymentBucket: "helloworld-layer-bucket"
+    number: 3
+  warmup:
+    officeHoursWarmer:
+      enabled: true
+      events:
+        - schedule: cron(0/5 8-17 ? * MON-FRI *)
+      concurrency: 10
+    outOfOfficeHoursWarmer:
+      enabled: true
+      events:
+        - schedule: cron(0/5 0-7 ? * MON-FRI *)
+        - schedule: cron(0/5 18-23 ? * MON-FRI *)
+        - schedule: cron(0/5 * ? * SAT-SUN *)
+      concurrency: 1
+    testWarmer:
+
 
 #package:
 #  exclude:
@@ -67,4 +78,5 @@ functions:
 plugins:
   - serverless-offline
   - serverless-prune-plugin
-  - serverless-layers
+  #- serverless-layers
+  - serverless-plugin-warmup
