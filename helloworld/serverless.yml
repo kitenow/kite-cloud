@@ -7,29 +7,35 @@ custom:
   prune:
     automatic: true
     number: 3
+  serverless-layers:
+    dependenciesPath: package.json
+    compatibleRuntimes: [nodejs14.x]
+    layersDeploymentBucket: "helloworld-layer-bucket"    
   warmup:
-    officeHoursWarmer:
+    dayWarmer:
       enabled: true
       events:
-        - schedule: cron(0/5 8-17 ? * MON-FRI *)
-      concurrency: 10
-    outOfOfficeHoursWarmer:
-      enabled: true
+        - schedule: cron(0/5 15-17 ? * MON-FRI *)
+      concurrency: 1
+    nightWarmer:
+      enabled: false
       events:
-        - schedule: cron(0/5 0-7 ? * MON-FRI *)
-        - schedule: cron(0/5 18-23 ? * MON-FRI *)
+        - schedule: cron(0/5 6-7 ? * MON-FRI *)
+        - schedule: cron(0/5 22-23 ? * MON-FRI *)
         - schedule: cron(0/5 * ? * SAT-SUN *)
       concurrency: 1
     testWarmer:
+      enabled: false
 
-
-#package:
-#  exclude:
-#    - node_modules/**
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+    - .warmup/**
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   lambdaHashingVersion: 20201221
   stage: dev
   region: ap-southeast-1
@@ -53,10 +59,13 @@ functions:
   func01:
     handler: ./functions/func03.func03
     events:
-      - http:
-          path: func01/get
-          method: get
-          cors: true
+      - schedule:
+          name: func01-cron
+          description: 'func01-cron'
+          rate: cron(0 12 * * ? *)
+          enabled: true
+          input:
+            keyValue: { "svr_value" : '${opt:stage}' }
 
   func02:
     handler: ./functions/func03.func03
@@ -78,5 +87,5 @@ functions:
 plugins:
   - serverless-offline
   - serverless-prune-plugin
-  #- serverless-layers
+  - serverless-layers
   - serverless-plugin-warmup
