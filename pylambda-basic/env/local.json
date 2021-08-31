@@ -1,0 +1,6 @@
+{
+  "DB_CONSTRING": "postgres://fccwjtes:te_IZuBGtz0Bpum53g27tzCKl7c6vfzp@arjuna.db.elephantsql.com/fccwjtes",
+  "REDIS_HOST": "redis-10199.c252.ap-southeast-1-1.ec2.cloud.redislabs.com",
+  "REDIS_PORT": 10199,
+  "REDIS_PW": "gA2qNWBvoYLAHYGEsgNy21qU6iPgqOiH"
+}
