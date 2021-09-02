@@ -7,17 +7,13 @@ custom:
   prune:
     automatic: true
     number: 3
-  serverless-layers:
-    dependenciesPath: package.json
-    compatibleRuntimes: [nodejs14.x]
-    layersDeploymentBucket: "helloworld-layer-bucket"    
   warmup:
-    dayWarmer:
+    a2Warmer:
       enabled: true
       events:
         - schedule: cron(0/5 15-17 ? * MON-FRI *)
       concurrency: 1
-    nightWarmer:
+    b2Warmer:
       enabled: false
       events:
         - schedule: cron(0/5 6-7 ? * MON-FRI *)
@@ -26,6 +22,10 @@ custom:
       concurrency: 1
     testWarmer:
       enabled: false
+  serverless-layers:
+    dependenciesPath: package.json
+    compatibleRuntimes: [nodejs14.x]
+    layersDeploymentBucket: "helloworld-layer-bucket"    
 
 package:
   individually: true
@@ -57,7 +57,7 @@ functions:
           cors: true
 
   func01:
-    handler: ./functions/func03.func03
+    handler: ./functions/func01.func01
     events:
       - schedule:
           name: func01-cron
@@ -68,7 +68,7 @@ functions:
             keyValue: { "svr_value" : '${opt:stage}' }
 
   func02:
-    handler: ./functions/func03.func03
+    handler: ./functions/func02.func02
     events:
       - http:
           path: func02/get
@@ -89,3 +89,5 @@ plugins:
   - serverless-prune-plugin
   - serverless-layers
   - serverless-plugin-warmup
+  - serverless-aws-alias
+

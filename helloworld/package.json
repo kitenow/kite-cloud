@@ -16,6 +16,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
+    "serverless-aws-alias": "^1.8.0",
     "serverless-layers": "^2.5.1",
     "serverless-offline": "^8.0.0",
     "serverless-plugin-warmup": "^5.3.1",
