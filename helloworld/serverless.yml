@@ -8,12 +8,12 @@ custom:
     automatic: true
     number: 3
   warmup:
-    a2Warmer:
-      enabled: true
+    a4Warmer:
+      enabled: false
       events:
         - schedule: cron(0/5 15-17 ? * MON-FRI *)
       concurrency: 1
-    b2Warmer:
+    b4Warmer:
       enabled: false
       events:
         - schedule: cron(0/5 6-7 ? * MON-FRI *)
@@ -89,5 +89,3 @@ plugins:
   - serverless-prune-plugin
   - serverless-layers
   - serverless-plugin-warmup
-  - serverless-aws-alias
-
