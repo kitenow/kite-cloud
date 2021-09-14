@@ -1,20 +1,18 @@
 service: helloworld
 
-frameworkVersion: "2"
-
 custom:
   env: ${file(./env/${opt:stage,'local'}.json)}
   prune:
     automatic: true
     number: 3
   warmup:
-    a4Warmer:
-      enabled: false
+    a5Warmer:
+      enabled: true
       events:
         - schedule: cron(0/5 15-17 ? * MON-FRI *)
       concurrency: 1
-    b4Warmer:
-      enabled: false
+    b5Warmer:
+      enabled: true
       events:
         - schedule: cron(0/5 6-7 ? * MON-FRI *)
         - schedule: cron(0/5 22-23 ? * MON-FRI *)
@@ -89,3 +87,4 @@ plugins:
   - serverless-prune-plugin
   - serverless-layers
   - serverless-plugin-warmup
+  - serverless-aws-alias
