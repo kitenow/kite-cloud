@@ -1,36 +1,5 @@
 service: helloworld
 
-custom:
-  env: ${file(./env/${opt:stage,'local'}.json)}
-  prune:
-    automatic: true
-    number: 3
-  warmup:
-    a5Warmer:
-      enabled: true
-      events:
-        - schedule: cron(0/5 15-17 ? * MON-FRI *)
-      concurrency: 1
-    b5Warmer:
-      enabled: true
-      events:
-        - schedule: cron(0/5 6-7 ? * MON-FRI *)
-        - schedule: cron(0/5 22-23 ? * MON-FRI *)
-        - schedule: cron(0/5 * ? * SAT-SUN *)
-      concurrency: 1
-    testWarmer:
-      enabled: false
-  serverless-layers:
-    dependenciesPath: package.json
-    compatibleRuntimes: [nodejs14.x]
-    layersDeploymentBucket: "helloworld-layer-bucket"    
-
-package:
-  individually: true
-  exclude:
-    - node_modules/**
-    - .warmup/**
-
 provider:
   name: aws
   runtime: nodejs14.x
@@ -45,46 +14,60 @@ provider:
     REDIS_PW: ${self:custom.env.REDIS_PW}
     #NODE_PATH: "./:/opt/node_modules"  
 
-functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello/get
-          method: get
-          cors: true
+custom:
+  env: ${file(./env/${opt:stage,'local'}.json)}
+  prune:
+    automatic: true
+    number: 3
+  warmup:
+    a5Warmer:
+      enabled: true
+      events:
+        - schedule: cron(0/5 15-16 ? * MON *)
+        - schedule: cron(0/5 15-16 ? * TUE *)
+#        - schedule: cron(0/5 15-16 ? * WEN *)
+#        - schedule: cron(0/5 15-16 ? * THR *)
+#        - schedule: cron(0/5 15-16 ? * FRI *)
+#        - schedule: cron(0/5 15-16 ? * SAT *)
+#        - schedule: cron(0/5 15-16 ? * SUN *)
+      concurrency: 1
+    b5Warmer:
+      enabled: true
+      events:
+        - schedule: cron(0/5 05-06 ? * MON *)
+#        - schedule: cron(0/5 05-06 ? * TUE *)
+#        - schedule: cron(0/5 05-06 ? * WEN *)
+#        - schedule: cron(0/5 05-06 ? * THR *)
+#        - schedule: cron(0/5 05-06 ? * FRI *)
+#        - schedule: cron(0/5 05-06 ? * SAT *)
+#        - schedule: cron(0/5 05-06 ? * SUN *)
+#      concurrency: 1
+#    testWarmer:
+#      enabled: false
+  serverless-layers:
+    dependenciesPath: package.json
+    compatibleRuntimes: [nodejs14.x]
+    layersDeploymentBucket: "helloworld-layer-bucket"
+  splitStacks:
+    perFunction: false
+    perType: true
+    perGroupFunction: false
 
-  func01:
-    handler: ./functions/func01.func01
-    events:
-      - schedule:
-          name: func01-cron
-          description: 'func01-cron'
-          rate: cron(0 12 * * ? *)
-          enabled: true
-          input:
-            keyValue: { "svr_value" : '${opt:stage}' }
+package:
+  excludeDevDependencies: true
+  individually: false
+  exclude:
+#    - node_modules/**
+    - .warmup/**
+#  include:
 
-  func02:
-    handler: ./functions/func02.func02
-    events:
-      - http:
-          path: func02/get
-          method: get
-          cors: true
-
-  func03:
-    handler: ./functions/func03.func03
-    events:
-      - http:
-          path: func03/get
-          method: get
-          cors: true
-
+functions: ${file(${opt:config-file}):functions}
 
 plugins:
   - serverless-offline
   - serverless-prune-plugin
-  - serverless-layers
+#  - serverless-layers
   - serverless-plugin-warmup
-  - serverless-aws-alias
+#  - serverless-plugin-include-dependencies
+  - serverless-plugin-split-stacks
+  
