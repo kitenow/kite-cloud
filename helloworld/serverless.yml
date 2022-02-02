@@ -1,4 +1,4 @@
-service: helloworld
+service: helloworld-layer
 
 provider:
   name: aws
@@ -12,7 +12,15 @@ provider:
     REDIS_HOST: ${self:custom.env.REDIS_HOST}
     REDIS_PORT: ${self:custom.env.REDIS_PORT}
     REDIS_PW: ${self:custom.env.REDIS_PW}
-    #NODE_PATH: "./:/opt/node_modules"  
+  layers:
+    - {Ref: TestLambdaLayer}
+
+layers:
+  test:
+    path: layer
+    name: layerLibs
+    ompatibleRuntimes:
+      - nodejs14.x
 
 custom:
   env: ${file(./env/${opt:stage,'local'}.json)}
@@ -21,10 +29,10 @@ custom:
     number: 3
   warmup:
     a5Warmer:
-      enabled: true
+      enabled: false
       events:
         - schedule: cron(0/5 15-16 ? * MON *)
-        - schedule: cron(0/5 15-16 ? * TUE *)
+#        - schedule: cron(0/5 15-16 ? * TUE *)
 #        - schedule: cron(0/5 15-16 ? * WEN *)
 #        - schedule: cron(0/5 15-16 ? * THR *)
 #        - schedule: cron(0/5 15-16 ? * FRI *)
@@ -32,7 +40,7 @@ custom:
 #        - schedule: cron(0/5 15-16 ? * SUN *)
       concurrency: 1
     b5Warmer:
-      enabled: true
+      enabled: false
       events:
         - schedule: cron(0/5 05-06 ? * MON *)
 #        - schedule: cron(0/5 05-06 ? * TUE *)
@@ -44,30 +52,32 @@ custom:
 #      concurrency: 1
 #    testWarmer:
 #      enabled: false
-  serverless-layers:
-    dependenciesPath: package.json
-    compatibleRuntimes: [nodejs14.x]
-    layersDeploymentBucket: "helloworld-layer-bucket"
+#  serverless-layers:
+#    dependenciesPath: package.json
+#    compatibleRuntimes: [nodejs14.x]
+#    layersDeploymentBucket: "helloworld-layer-bucket"
   splitStacks:
+    nestedStackCount: 10
     perFunction: false
-    perType: true
-    perGroupFunction: false
+    perType: false
+    perGroupFunction: true
+
 
 package:
   excludeDevDependencies: true
   individually: false
   exclude:
-#    - node_modules/**
-    - .warmup/**
-#  include:
+    - .serverlss
+    - .warmup
 
 functions: ${file(${opt:config-file}):functions}
+
 
 plugins:
   - serverless-offline
   - serverless-prune-plugin
-#  - serverless-layers
   - serverless-plugin-warmup
-#  - serverless-plugin-include-dependencies
   - serverless-plugin-split-stacks
   
+
+# sls deploy --stage dev --profile sls -v --force --config-file slsfunctions.js  

@@ -1,13 +1,6 @@
 service: helloworld
 
 functions:
-  funca:
-    handler: handler.hello
-    events:
-      - http:
-          path: funca/get
-          method: get
-          cors: true
 
   funcb:
     handler: ./functions/func01.func01

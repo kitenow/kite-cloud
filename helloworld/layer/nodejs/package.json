@@ -1,0 +1,35 @@
+{
+  "name": "helloworld",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "path": "^0.12.7",
+    "pg": "^8.7.1",
+    "pm2": "^5.1.1",
+    "redis": "^3.1.2",
+    "request": "^2.88.2",
+    "socket.io": "^4.2.0",
+    "yamljs": "^0.3.0"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "lodash": "^4.17.21",
+    "serverless-aws-alias": "^1.8.0",
+    "serverless-layers": "^2.5.1",
+    "serverless-nested-stack": "^0.0.7",
+    "serverless-offline": "^8.2.0",
+    "serverless-plugin-include-dependencies": "^5.0.0",
+    "serverless-plugin-split-stacks": "^1.11.2",
+    "serverless-plugin-warmup": "^5.3.1",
+    "serverless-prune-plugin": "^1.5.1"
+  }
+}
