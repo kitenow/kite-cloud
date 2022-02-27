@@ -4,6 +4,8 @@ functions:
 
   funcb:
     handler: ./functions/func01.func01
+    layers:
+    - {Ref: LibsLambdaLayer}    
     events:
       - schedule:
           name: funcb-cron
@@ -11,7 +13,7 @@ functions:
           rate: cron(0 12 * * ? *)
           enabled: true
           input:
-            keyValue: { "svr_value" : '${opt:stage}' }
+            keyValue: { "svr_value" : '${opt:stage}' }                  
 
   funcc:
     handler: ./functions/func02.func02
@@ -20,6 +22,8 @@ functions:
           path: funcc/get
           method: get
           cors: true
+    layers:
+        - {Ref: LibsLambdaLayer}                
 
   funcd:
     handler: ./functions/func02.func02
@@ -31,6 +35,10 @@ functions:
 
   funce:
     handler: ./functions/func03.func03
+    package:
+      include:
+        - functions/fonts/Roboto-Bold.ttf
+        - functions/fonts/Roboto-Regular.ttf
     events:
       - http:
           path: funce/get

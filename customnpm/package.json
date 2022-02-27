@@ -1,0 +1,7 @@
+{
+  "name": "customnpm",
+  "version": "1.0.0",
+  "dependencies": {
+    "csv4-font": "file:common/fonts"
+  }
+}

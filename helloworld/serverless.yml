@@ -12,14 +12,12 @@ provider:
     REDIS_HOST: ${self:custom.env.REDIS_HOST}
     REDIS_PORT: ${self:custom.env.REDIS_PORT}
     REDIS_PW: ${self:custom.env.REDIS_PW}
-  layers:
-    - {Ref: TestLambdaLayer}
 
 layers:
-  test:
+  libs:
     path: layer
     name: layerLibs
-    ompatibleRuntimes:
+    compatibleRuntimes:
       - nodejs14.x
 
 custom:
@@ -32,43 +30,27 @@ custom:
       enabled: false
       events:
         - schedule: cron(0/5 15-16 ? * MON *)
-#        - schedule: cron(0/5 15-16 ? * TUE *)
-#        - schedule: cron(0/5 15-16 ? * WEN *)
-#        - schedule: cron(0/5 15-16 ? * THR *)
-#        - schedule: cron(0/5 15-16 ? * FRI *)
-#        - schedule: cron(0/5 15-16 ? * SAT *)
-#        - schedule: cron(0/5 15-16 ? * SUN *)
       concurrency: 1
     b5Warmer:
-      enabled: false
+      enabled: true
       events:
         - schedule: cron(0/5 05-06 ? * MON *)
-#        - schedule: cron(0/5 05-06 ? * TUE *)
-#        - schedule: cron(0/5 05-06 ? * WEN *)
-#        - schedule: cron(0/5 05-06 ? * THR *)
-#        - schedule: cron(0/5 05-06 ? * FRI *)
-#        - schedule: cron(0/5 05-06 ? * SAT *)
-#        - schedule: cron(0/5 05-06 ? * SUN *)
-#      concurrency: 1
-#    testWarmer:
-#      enabled: false
-#  serverless-layers:
-#    dependenciesPath: package.json
-#    compatibleRuntimes: [nodejs14.x]
-#    layersDeploymentBucket: "helloworld-layer-bucket"
   splitStacks:
     nestedStackCount: 10
     perFunction: false
     perType: false
-    perGroupFunction: true
+    perGroupFunction: false
 
 
 package:
   excludeDevDependencies: true
-  individually: false
+  individually: true
   exclude:
     - .serverlss
     - .warmup
+    - layer/**
+    - node_modules/**
+    - functions/fonts/**
 
 functions: ${file(${opt:config-file}):functions}
 
@@ -81,3 +63,4 @@ plugins:
   
 
 # sls deploy --stage dev --profile sls -v --force --config-file slsfunctions.js  
+# aws cloudformation delete-stack --stack-name helloworld-layer-dev

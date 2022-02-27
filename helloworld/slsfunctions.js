@@ -8,6 +8,13 @@ module.exports.functions = function() {
 
     let fns = ymlfiles.map(path => fs.readFileSync(path, 'utf8'))
     fns = fns.map(raw => yamljs.parse(raw).functions)
+
+    fns.map(f => {
+        Object.keys(f).map(k => {
+            f[k]["layers"] = [{"Ref" : "LibsLambdaLayer"}]
+        })
+    });
+
     fns = fns.reduce((result, functions) => {return Object.assign(result, functions)}, {})
     return fns
 }
