@@ -1,25 +1,28 @@
 service: hwv1
 
-frameworkVersion: "2"
-
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: ap-southeast-1
   memorySize: 256
-  aliasStage:
-    loggingLevel: "ERROR"
-    dataTraceEnabled: true
 
 functions:
   hello:
     handler: handler.hello
     events:
       - http:
-          path: hello/get
-          method: get
+          path: hello/{any+}
+          method: ANY
           cors: true    
 
-plugins:
-  - serverless-aws-alias
+package:
+  excludeDevDependencies: true
+  individually: false
+  exclude:
+    - .serverlss
+    - .warmup
+    - node_modules/**
+
+#plugins:
+#  - serverless-aws-alias
