@@ -5,16 +5,22 @@ provider:
   name: aws
   runtime: nodejs18.x
   memorySize: 512
-  timeout: 10
+  timeout: 20
   stage: dev
   region: us-west-2
   httpApi:
     cors: true
-  environment:
-    stage: dev
 
 
 functions:
+  start:
+    handler: functions/entry/index.handler
+    name: ${self:service}-handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: '*'
+
   admin:
     handler: functions/admin/index.handler
     name: ${self:service}-admin-handler

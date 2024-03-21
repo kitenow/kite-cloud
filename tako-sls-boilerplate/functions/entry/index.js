@@ -4,19 +4,12 @@ const router = express.Router();
 const pg = require("pg");
 const app = express();
 
-
-
-
 router.get("/", (req, res) => {
-    console.log("express router");
-    res.json({ response:true, message: "This is admin index path" });
+    res.json({ response:true, message: "This is root : index path" });
 });
 
-
-app.use('/admin/', router);
-app.use("/admin/user", require('./user'));
-
-
+app.use('/', router);
+app.use('/login', require('./login'));
 
 module.exports.handler = serverless(app);
 
