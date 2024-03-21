@@ -1,0 +1,35 @@
+service: tako-sls-boilerplate
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  memorySize: 512
+  timeout: 10
+  stage: dev
+  region: us-west-2
+  httpApi:
+    cors: true
+  environment:
+    stage: dev
+
+
+functions:
+  admin:
+    handler: functions/admin/index.handler
+    name: ${self:service}-admin-handler
+    events:
+      - httpApi:
+          path: /admin/{proxy+}
+          method: '*'
+
+  biz:
+    handler: functions/biz/index.handler
+    name: ${self:service}-biz-handler
+    events:
+      - httpApi:
+          path: /biz/{proxy+}
+          method: '*'
+
+plugins:
+  - serverless-offline

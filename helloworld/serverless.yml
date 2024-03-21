@@ -32,11 +32,11 @@ custom:
         - schedule: cron(0/5 15-16 ? * MON *)
       concurrency: 1
     b5Warmer:
-      enabled: true
+      enabled: false
       events:
         - schedule: cron(0/5 05-06 ? * MON *)
   splitStacks:
-    nestedStackCount: 10
+    nestedStackCount: 3
     perFunction: false
     perType: false
     perGroupFunction: false

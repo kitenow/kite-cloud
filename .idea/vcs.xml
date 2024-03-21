@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/node-express-mongoose/node-express-mongoose" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/serverless-express-boilerplate" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/sls-basic-route/serverless-express-boilerplate" vcs="Git" />
   </component>
 </project>
